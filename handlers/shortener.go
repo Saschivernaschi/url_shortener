@@ -6,19 +6,19 @@ import (
 	"url_shortener/storage"
 
 	"github.com/wordgen/wordgen"
+	"github.com/wordgen/wordlists"
 )
 
-func generateCode(n int) (string, error) {
+func generateCode() (string, error) {
 	generator := wordgen.NewGenerator()
-	var url_code string
-	for i := 0; i < n; {
-		word, err := generator.Generate()
-		if err != nil {
-			return "", err
-		}
-		url_code = url_code + "-" + word
+	generator.Words = wordlists.EffLarge
+
+	word, err := generator.Generate()
+	if err != nil {
+		return "", err
 	}
-	return url_code, nil
+
+	return word, nil
 }
 
 func ShortenHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,9 +27,10 @@ func ShortenHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "No URL provided", http.StatusBadRequest)
 		return
 	}
-	code, err := generateCode(3)
+	code, err := generateCode()
 	if err != nil {
-		http.Error(w, "Could not generate short url", http.StatusInternalServerError)
+		http.Error(w, "Could not generate words for short url", http.StatusInternalServerError)
+		return
 	}
 
 	storage.Save(code, url)

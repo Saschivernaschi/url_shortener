@@ -1,0 +1,4 @@
+github.com/wordgen/wordgen v0.4.0 h1:auxV46r9QSW2rvidzW1iBjA+ftl3owEHZrP/1GTRAus=
+github.com/wordgen/wordgen v0.4.0/go.mod h1:x90ETdoxrm7I7qhVxT8QJHoOgEv66YDen1fUadBNHiI=
+golang.org/x/text v0.16.0 h1:a94ExnEXNtEwYLGJSIUxnWoxoRz/ZcCsV63ROupILh4=
+golang.org/x/text v0.16.0/go.mod h1:GhwF1Be+LQoKShO3cGOHzqOgRrGaYc9AvblQOmPVHnI=

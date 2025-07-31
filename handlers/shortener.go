@@ -2,19 +2,23 @@ package handlers
 
 import (
 	"fmt"
-	"math/rand"
 	"net/http"
 	"url_shortener/storage"
+
+	"github.com/wordgen/wordgen"
 )
 
-const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-func generateCode(n int) string {
-	code := make([]byte, n)
-	for i := range code {
-		code[i] = letters[rand.Intn(len(letters))]
+func generateCode(n int) (string, error) {
+	generator := wordgen.NewGenerator()
+	var url_code string
+	for i := 0; i < n; {
+		word, err := generator.Generate()
+		if err != nil {
+			return "", err
+		}
+		url_code = url_code + "-" + word
 	}
-	return string(code)
+	return url_code, nil
 }
 
 func ShortenHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +27,11 @@ func ShortenHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "No URL provided", http.StatusBadRequest)
 		return
 	}
-	code := generateCode(6)
+	code, err := generateCode(3)
+	if err != nil {
+		http.Error(w, "Could not generate short url", http.StatusInternalServerError)
+	}
+
 	storage.Save(code, url)
 	fmt.Fprintf(w, "Short URL: http://localhost:8080/%s\n", code)
 }
